@@ -1,7 +1,8 @@
 const express = require("express");
 const logger = require("morgan");
 const mongoose = require("mongoose");
-const User = require("./models/user");
+const router = require("./controllers");
+const path = require("path");
 
 const PORT = process.env.PORT || 3000;
 
@@ -14,19 +15,15 @@ app.use(express.json());
 
 app.use(express.static("public"));
 
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/dbExample", {
-  useNewUrlParser: true,
-});
-
-app.post("/users", ({ body }, res) => {
-  User.create(body)
-    .then((dbUser) => {
-      res.json(dbUser);
-    })
-    .catch((err) => {
-      res.json(err);
-    });
-});
+mongoose.connect(
+  process.env.MONGODB_URI || "mongodb://localhost/fitnessTracker",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+  }
+);
 
 app.listen(PORT, () => {
   console.log(`App running on port ${PORT}!`);
